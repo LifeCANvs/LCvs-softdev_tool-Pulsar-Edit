@@ -50,25 +50,22 @@ export default class ChangeLogView {
             <p>Feel free to read our <a href="https://github.com/pulsar-edit/pulsar/blob/master/CHANGELOG.md">Full Change Log</a>.</p>
             <ul>
               <li>
-                [markdown-preview] Improve rendering performance in preview panes, especially in documents with lots of fenced code blocks.
+                Resolved some issues of using <code>pulsar -p</code> to access <code>ppm</code> in the command line on Windows.
               </li>
               <li>
-                [markdown-preview] GitHub-style Markdown preview now uses up-to-date styles and supports dark mode.
+                Added a new icon for Pulsar on Windows, increasing it's visual fidelity in most locations.
               </li>
               <li>
-                Pulsar's OS level theme will now change according to the selected editor theme if <code>core.syncWindowThemeWithPulsarTheme</code> is enabled.
+                [snippets] Fixed an issue with expanding snippet variables in certain scenarios if the snippet inserted new lines into the buffer.
               </li>
               <li>
-                [language-sass] Add SCSS Tree-sitter grammar.
+                Updated misconfigured links in the <code>CONTRIBUTING.md</code> file.
               </li>
               <li>
-                [language-ruby] Update to latest Tree-sitter Ruby parser.
+                [ppm] Resolved an issue that could prevent renaming an existing package.
               </li>
               <li>
-                [language-gfm] Make each block-level HTML tag its own injection.
-              </li>
-              <li>
-                [language-typescript] More highlighting fixes, especially for operators.
+                Various Tree-sitter improvements (folds, indents, custom queries, grammar updates...)
               </li>
             </ul>
 

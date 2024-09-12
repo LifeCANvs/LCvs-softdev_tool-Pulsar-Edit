@@ -121,15 +121,18 @@ module.exports = class WASMTreeSitterGrammar {
     return this.scopeNamesById.get(id);
   }
 
-  // Returns the Tree-sitter language instance associated with this grammar
-  // _if_ it has already loaded. Call this only when you can be certain that
-  // it's present.
+  // Extended: Retrieves the Tree-sitter `Language` instance associated with
+  // this grammar _if_ it has already been loaded.
+  //
+  // Language instances cannot be retrieved synchrously, so this will return
+  // `undefined` if the instance has not yet been loaded. In that case, going
+  // async will be unavoidable, and you’ll need to call {::getLanguage}.
   getLanguageSync() {
     return this._language;
   }
 
-  // Extended: Returns the Tree-sitter language instance associated with this
-  // grammar once it loads.
+  // Extended: Retrieves the Tree-sitter language instance associated with this
+  // grammar.
   //
   // Returns a {Promise} that will resolve with a Tree-sitter `Language`
   // instance. Once it resolves, the grammar is ready to perform parsing and to
@@ -179,6 +182,7 @@ module.exports = class WASMTreeSitterGrammar {
     }).then(() => {
       this._queryFilesLoaded = true;
       this._loadQueryFilesPromise = null;
+      this.emitter.emit('did-load-query-files', this);
     });
 
     return this._loadQueryFilesPromise;
@@ -321,7 +325,7 @@ module.exports = class WASMTreeSitterGrammar {
     this.queryCache.delete(queryType);
     this[queryType] = contents;
     let query = await this.getQuery(queryType);
-    this.emitter.emit('did-change-query-file', { filePath: '', queryType });
+    this.emitter.emit('did-change-query', { filePath: '', queryType });
     return query;
   }
 
@@ -347,24 +351,49 @@ module.exports = class WASMTreeSitterGrammar {
             this.queryCache.delete(queryType);
             return;
           }
-          this.emitter.emit('did-change-query-file', { filePath, queryType });
+          this.emitter.emit('did-change-query', { filePath, queryType });
         });
       }));
     }
   }
 
-  // Extended: Calls `callback` when any of this grammar's query files change.
+  // Extended: Calls `callback` when any of this grammar's queries change.
   //
-  // The callback is invoked with an object argument with two keys:
+  // A grammar's queries typically will not change after initial load. When
+  // they do, it may mean:
   //
-  // * `callback`: The callback to be invoked. Takes one argument:
-  //   * `data`: An object with keys:
-  //     * `filePath`: The path to the query file on disk.
-  //     * `queryType`: The type of query file, as denoted by its
+  // - The user is editing query files in dev mode; Pulsar will automatically
+  //   reload queries in dev mode after changes.
+  // - A community package is altering a query file via an API like
+  //   {::setQueryForTest}.
+  //
+  // * `callback` {Function}
+  //   * `data` {Object}
+  //     * `filePath` {String} The path to the query file on disk.
+  //     * `queryType` {String} The type of query file, as denoted by its
   //         configuration key in the grammar file. Usually one of
   //         `highlightsQuery`, `indentsQuery`, `foldsQuery`, or `tagsQuery`.
+  onDidChangeQuery(callback) {
+    return this.emitter.on('did-change-query', callback);
+  }
+
+  // Extended: Calls `callback` when any of this grammar's queries change.
+  //
+  // Alias of {::onDidChangeQuery}.
   onDidChangeQueryFile(callback) {
-    return this.emitter.on('did-change-query-file', callback);
+    return this.onDidChangeQuery(callback);
+  }
+
+  // Extended: Calls `callback` when this grammar first loads its query files.
+  //
+  // Since a grammar may not load immedately on startup, this method makes it
+  // easier to hook into the query life cycle in order to modify or augment a
+  // grammar's default queries.
+  //
+  // * callback A function with the following argument:
+  //   * grammar The {WASMTreeSitterGrammar} whose queries have loaded.
+  onDidLoadQueryFiles(callback) {
+    return this.emitter.on('did-load-query-files', callback);
   }
 
   activate() {
@@ -388,6 +417,10 @@ module.exports = class WASMTreeSitterGrammar {
   //
   // This differs from TextMate-style injections, which operate at the scope
   // level and are currently incompatible with Tree-sitter grammars.
+  //
+  // You should typically not call this method directly; instead, call
+  // {GrammarRegistry::addInjectionPoint} and pass a given grammar’s root
+  // language scope as the first argument.
   //
   // NOTE: Packages will call {::addInjectionPoint} with a given scope name,
   // and that call will be delegated to any Tree-sitter grammars that match
@@ -439,7 +472,6 @@ module.exports = class WASMTreeSitterGrammar {
   //     applied varies based on the grammar; the function will be called with
   //     a grammar instance as its only argument.
   //
-  //
   addInjectionPoint(injectionPoint) {
     let { type } = injectionPoint;
     let injectionPoints = this.injectionPointsByType[type];
@@ -468,15 +500,15 @@ module.exports = class WASMTreeSitterGrammar {
   Section - Backward compatibility shims
   */
   /* eslint-disable no-unused-vars */
-  onDidUpdate(callback) {
+  onDidUpdate(_callback) {
     // do nothing
   }
 
-  tokenizeLines(text, compatibilityMode = true) {
+  tokenizeLines(text, _compatibilityMode = true) {
     return text.split('\n').map(line => this.tokenizeLine(line, null, false));
   }
 
-  tokenizeLine(line, ruleStack, firstLine) {
+  tokenizeLine(line, _ruleStack, _firstLine) {
     return {
       value: line,
       scopes: [this.scopeName]

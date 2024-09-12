@@ -6,6 +6,81 @@
 
 ## [Unreleased]
 
+## 1.120.0
+
+- Resolved some issues of using `pulsar -p` to access `ppm` in the command line on Windows.
+- Added a new icon for Pulsar on Windows, increasing it's visual fidelity in most locations.
+- [snippets] Fixed an issue with expanding snippet variables in certain scenarios if the snippet inserted new lines into the buffer.
+- Updated misconfigured links in the `CONTRIBUTING.md` file.
+- [ppm] Resolved an issue that could prevent renaming an existing package.
+- Various Tree-sitter improvements (folds, indents, custom queries, grammar updates...)
+
+### Pulsar
+- Fixed: Tree-sitter rolling fixes 1.120 edition [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1062)
+- Updated: ppm: Update ppm to commit d9bcff111146547e1f4dec63 [@DeeDeeG](https://github.com/pulsar-edit/pulsar/pull/1075)
+- Fixed: [snippets] Fix incorrect range traversal when resolving variables [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1043)
+- Added: [windows] Improve Icon [@confused-Techie](https://github.com/pulsar-edit/pulsar/pull/1072)
+- Added: Use a different strategy for `pulsar -p` on Windows... [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1063)
+- Fixed: CONTRIBUTING.MD link to section fixed [@gsabatini2016](https://github.com/pulsar-edit/pulsar/pull/1067)
+
+### PPM
+- Updated: Begin less reliance on `async` package: Await as we go [@confused-Techie](https://github.com/pulsar-edit/ppm/pull/134)
+- Fixed: Fix incorrect behavior on package rename [@savetheclocktower](https://github.com/pulsar-edit/ppm/pull/135)
+- Updated: Update many dependencies [@DeeDeeG](https://github.com/pulsar-edit/ppm/pull/133)
+- Revert: Revert "CI: Work around a weird bug in Yarn v1.x" [@DeeDeeG](https://github.com/pulsar-edit/ppm/pull/131)
+
+## 1.119.0
+
+- Changed `language-php` to continue syntax-highlighting even when encountering unbalanced PHP tags. (Avoid throwing a syntax error)
+- Indentation, fold, and highlighting fixes in `language-python`, `language-javascript`, `language-typescript`, `language-shell` and `language-c`.
+- Worked around API breakage (FreeBSD `libiconv` vs GNU `libiconv`) in the `iconv` library shipped in macOS 13+
+- Fix `--no-sandbox` flag not being applied to the `.desktop` launcher on Linux (Fixes Dev Tools)
+
+### Pulsar
+
+- Tree-sitter rolling fixes, 1.119.0 edition [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1028)
+- Rewrite `tree-view.js` [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1052)
+- Fix macOS binaries by vendorizing `libiconv` [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1051)
+- Link to Homebrew version of `libiconv`... [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1039)
+- Revert "Merge pull request #810 from pulsar-edit/fix-on-change-cursor-pos" [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1035)
+- electron-builder: Add '--no-sandbox' launch arg for Linux build targets [@DeeDeeG](https://github.com/pulsar-edit/pulsar/pull/1029)
+
+### superstring
+
+- Candidate for new `master` [@savetheclocktower](https://github.com/pulsar-edit/superstring/pull/15)
+
+## 1.118.0
+
+- Various tree-sitter grammar improvements
+  - Docs fixes
+  - A parser update for PHP
+  - Miscellaneous grammar fixes and improvements
+- Added a preference `core.allowWindowTransparency` so that themes and user stylesheets
+  can make editor windows' backgrounds transparent.
+- Added a new modern tree sitter "test" for highlight query - `ancestorTypeNearerThan`
+  that matches if it finds the _first_ type as an ancestor, but _doesn't match_ if
+  any "other" ancestors are found before
+- Syntax quoting and unquoting in Clojure now highlights correctly, and also
+  highlights full qualified keywords differently than generated ones
+- `content` field of addInjectionPoint for modern-tree-sitter now supports a second
+  `buffer` argument, for better customization if one wants to
+- EDN is back to being detected as Clojure (for compatibility) but highlights as EDN
+- Fixed syntax quoting on Clojure grammar (newer tree-sitter), fixed some
+  injection points on Clojure. Added support for highligting metadata, and added
+  better support for "def" elements (for example - doesn't scope `default` or
+  `definition` as a `def`, but highlights `p/defresolver`)
+- Fixed `textChanged` property to be accurate when deleting characters
+- Fixed `ppm publish` for publishing brand new packages
+
+### Pulsar
+
+- Fixed: Tree-sitter rolling fixes, 1.118 edition [@savetheclocktower](https://github.com/pulsar-edit/pulsar/pull/1010)
+- Added: src: Allow windows to be transparent, behind a pref (off by default) [@DeeDeeG](https://github.com/pulsar-edit/pulsar/pull/982)
+- Added: Another batch of Clojure enhancements [@mauricioszabo](https://github.com/pulsar-edit/pulsar/pull/729)
+- Fixed: Fix `onDidChangeCursorPosition` callback event property on deleting characters [@mauricioszabo](https://github.com/pulsar-edit/pulsar/pull/810)
+- Bumped: Update ppm to commit 3542dee00f4622f7458f2f65f05e5 [@DeeDeeG](https://github.com/pulsar-edit/pulsar/pull/1014)
+- Updated: Cirrus: Update Rolling upload token [@DeeDeeG](https://github.com/pulsar-edit/pulsar/pull/1011)
+
 ## 1.117.0
 
 * [markdown-preview] Improve rendering performance in preview panes, especially in documents with lots of fenced code blocks.

@@ -73,6 +73,11 @@
 
 (required_parameter
   pattern: (object_pattern
+    (rest_pattern (identifier) @variable.parameter.destructuring.rest._LANG_))
+    (#set! capture.final))
+
+(required_parameter
+  pattern: (object_pattern
     (object_assignment_pattern
       (shorthand_property_identifier_pattern) @variable.parameter.destructuring.with-default._LANG_))
     (#set! capture.final))
@@ -836,6 +841,9 @@
 "new" @keyword.operator.new._LANG_
 
 "=" @keyword.operator.assignment._LANG_
+
+["&" "|" "<<" ">>" ">>>" "~" "^"] @keyword.operator.bitwise.js
+
 (non_null_expression "!" @keyword.operator.non-null._LANG_)
 (unary_expression "!" @keyword.operator.unary._LANG_)
 
@@ -860,7 +868,7 @@
 (binary_expression
   ["/" "+" "-" "*" "**" "%"] @keyword.operator.arithmetic._LANG_)
 
-(unary_expression ["+" "-"] @keyword.operator.unary._LANG_)
+(unary_expression ["+" "-" "void"] @keyword.operator.unary._LANG_)
 
 (binary_expression
   [
