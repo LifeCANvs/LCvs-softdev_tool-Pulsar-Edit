@@ -50,22 +50,17 @@ export default class ChangeLogView {
             <p>Feel free to read our <a href="https://github.com/pulsar-edit/pulsar/blob/master/CHANGELOG.md">Full Change Log</a>.</p>
             <ul>
               <li>
-                Resolved some issues of using <code>pulsar -p</code> to access <code>ppm</code> in the command line on Windows.
+                Enhanced spellcheck to allow spellchecking on sections of a buffer.
+                Making it possible to spellcheck comments within code, which has been enabled by default.
               </li>
               <li>
-                Added a new icon for Pulsar on Windows, increasing it's visual fidelity in most locations.
+                Tree-sitter fixes and enhancements for <code>language-c</code>.
               </li>
               <li>
-                [snippets] Fixed an issue with expanding snippet variables in certain scenarios if the snippet inserted new lines into the buffer.
+                Updated error message received when deleting a file in Linux to be more accurate.
               </li>
               <li>
-                Updated misconfigured links in the <code>CONTRIBUTING.md</code> file.
-              </li>
-              <li>
-                [ppm] Resolved an issue that could prevent renaming an existing package.
-              </li>
-              <li>
-                Various Tree-sitter improvements (folds, indents, custom queries, grammar updates...)
+                Fixed error that could cause some keymaps to not appear under a package in <code>settings-view</code>.
               </li>
             </ul>
 
